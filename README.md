@@ -19,7 +19,7 @@ import time
 import async4s
 
 # Use 4 threads.
-pool = async4s.AsyncPool(max_workers=4)
+pool = async4s.ThreadPool(max_workers=4)
 
 @async4s.task(pool)
 def work():
@@ -31,8 +31,10 @@ def work_callback(work):
     print(work.result())
 
 
-for i in range(3):
+for i in range(4):
     work()
+pool.shutdown()
+print("All done")
 ```
 
 ## Release History
