@@ -7,6 +7,8 @@ import os
 
 from setuptools import setup
 
+import async4s
+
 
 cwd = os.path.abspath(os.path.dirname(__file__))
 
@@ -16,7 +18,7 @@ with io.open(os.path.join(cwd, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="async4s",
-    version="0.0.2",
+    version=async4s.__version__,
     py_modules=["async4s"],
     description="This module makes it simplely to run things in async.",
     long_description=long_description,

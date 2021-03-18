@@ -4,6 +4,9 @@ import multiprocessing
 from concurrent.futures import ThreadPoolExecutor
 
 
+__version__ = "0.0.3"
+
+
 class ThreadPool:
     def __init__(self, max_workers=None):
         if max_workers is None:
