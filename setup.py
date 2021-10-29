@@ -5,7 +5,7 @@
 import io
 import os
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 import async4s
 
@@ -19,7 +19,7 @@ with io.open(os.path.join(cwd, "README.md"), encoding="utf-8") as f:
 setup(
     name="async4s",
     version=async4s.__version__,
-    py_modules=["async4s"],
+    packages=find_packages(exclude=["test*"]),
     description="This module makes it simplely to run things in async.",
     long_description=long_description,
     long_description_content_type="text/markdown",

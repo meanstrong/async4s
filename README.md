@@ -16,32 +16,57 @@ pip install async4s
 ```
 
 ## Example
+- async by thread
 ```python
 import time
 
-import async4s
+from async4s.thread import Master, Worker
 
-# Use 4 threads.
-pool = async4s.ThreadPool(max_workers=4)
+def work(i):
+    time.sleep(i)
+    return i
 
-@async4s.task(pool)
-def work():
-    time.sleep(3)
-    return "Work Done!!!"
+def callback(results):
+    print(results)
 
-@async4s.callback(pool)
-def work_callback(work):
-    print(work.result())
+print(time.perf_counter())
+workers = [Worker(work, i) for i in range(5)]
+m = Master(workers, callback)
+print("main")
+m.wait()
+print(time.perf_counter())
+```
+
+- async by asyncio
+```python
+import time
+import asyncio
+
+from async4s.coroutine import Master, Worker
 
 
-for i in range(4):
-    work()
-pool.shutdown()
-print("All done")
+async def work(i):
+    await asyncio.sleep(i)
+    return i
+
+
+def callback(results):
+    print(results)
+
+
+print(time.perf_counter())
+workders = (Worker(work, i) for i in range(5))
+master = Master(workders, callback=callback)
+print("main")
+master.wait()
+
+print(time.perf_counter())
 ```
 
 ## Release History
 ### 0.0.1(2021-01-26)
+- Birth
+### 1.0.0(2021-10-29)
 - Birth
 
 ## Author
