@@ -4,7 +4,7 @@
 [![image](https://img.shields.io/pypi/l/async4s.svg)](https://pypi.org/project/async4s/)
 
 ## About
-这是一个简单易用的异步执行模块，提供几个python装饰器，使原有方法轻松变为异步执行。  
+这是一个简单易用的异步执行模块，可以使原有方法轻松变为异步执行。  
 
 ## Requirements
 - Python3
