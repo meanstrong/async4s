@@ -67,7 +67,8 @@ print(time.perf_counter())
 ### 0.0.1(2021-01-26)
 - Birth
 ### 1.0.0(2021-10-29)
-- Birth
+- Master-Worker mode
+- both implement by thread and asyncio
 
 ## Author
 - <a href="mailto:pmq2008@gmail.com">Rocky Peng</a>
