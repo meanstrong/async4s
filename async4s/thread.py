@@ -1,35 +1,32 @@
 #!/usr/bin/env python
 from __future__ import annotations
 
-import multiprocessing
 from concurrent.futures import Future, ThreadPoolExecutor
-from threading import Thread
-from typing import Any, Callable, Iterable, List, Sequence
-
+from typing import Callable, List
 
 __all__ = ["Master", "Worker"]
 
 
 class Master(object):
-    def __init__(self, workers: Iterable[Worker], callback: Callable[[Sequence], Any] = None, max_workers: int = None):
-        if max_workers is None:
-            max_workers = multiprocessing.cpu_count()
-        self._worker_pool = ThreadPoolExecutor(max_workers=max_workers)
-        self._results: List[Future] = []
-        for worker in workers:
-            t = self._worker_pool.submit(worker)
-            self._results.append(t)
-        self._callback = callback
-        self._master = Thread(target=self.on_finished, daemon=True)
-        self._master.start()
+    def __init__(self, max_workers: int = None):
+        self._executor = ThreadPoolExecutor(max_workers=max_workers)
+        self._workers: List[Worker] = []
+        self._done_callbacks: List[Callable[[Future]]] = []
 
-    def on_finished(self):
-        result = [i.result() for i in self._results]
-        if self._callback is not None:
-            return self._callback(result)
+    def add_worker(self, worker: Worker):
+        self._workers.append(worker)
+
+    def add_done_callback(self, callback: Callable[[Future]]):
+        self._done_callbacks.append(callback)
+
+    def start(self):
+        for worker in self._workers:
+            t = self._executor.submit(worker)
+            for callback in self._done_callbacks:
+                t.add_done_callback(callback)
 
     def wait(self):
-        self._master.join()
+        self._executor.shutdown()
 
 
 class Worker(object):
