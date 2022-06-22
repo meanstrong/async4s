@@ -7,6 +7,16 @@ from typing import Callable, List
 __all__ = ["Master", "Worker"]
 
 
+class Worker(object):
+    def __init__(self, func, *args, **kargs):
+        self._func = func
+        self._args = args
+        self._kargs = kargs
+
+    def __call__(self):
+        return self._func(*self._args, **self._kargs)
+
+
 class Master(object):
     def __init__(self, max_workers: int = None):
         self._executor = ThreadPoolExecutor(max_workers=max_workers)
@@ -27,13 +37,3 @@ class Master(object):
 
     def wait(self):
         self._executor.shutdown()
-
-
-class Worker(object):
-    def __init__(self, func, *args, **kargs):
-        self._func = func
-        self._args = args
-        self._kargs = kargs
-
-    def __call__(self):
-        return self._func(*self._args, **self._kargs)

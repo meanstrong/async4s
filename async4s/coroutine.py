@@ -2,26 +2,10 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Callable, Coroutine, Iterable, Sequence
+from asyncio.futures import Future
+from typing import Callable, Coroutine, List
 
 __all__ = ["Master", "Worker"]
-
-
-class Master(object):
-    def __init__(self, workers: Iterable[Worker], callback: Callable[[Sequence], Any] = None):
-        self._worker_tasks = [asyncio.ensure_future(worker()) for worker in workers]
-        self._callback = callback
-        self._master_task = asyncio.ensure_future(self.on_finished())
-
-    async def on_finished(self):
-        results = await asyncio.gather(*self._worker_tasks)
-        if self._callback is not None:
-            return self._callback(results)
-
-    def wait(self):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(asyncio.gather(self._master_task))
-        return self._master_task.result()
 
 
 class Worker(object):
@@ -32,3 +16,24 @@ class Worker(object):
 
     async def __call__(self):
         return await self._func(*self._args, **self._kargs)
+
+
+class Master(object):
+    def __init__(self):
+        self._workers: List[Worker] = []
+        self._done_callbacks: List[Callable[[Future]]] = []
+
+    def add_worker(self, worker: Worker):
+        self._workers.append(worker)
+
+    def add_done_callback(self, callback: Callable[[Future]]):
+        self._done_callbacks.append(callback)
+
+    async def start(self):
+        tasks = []
+        for worker in self._workers:
+            task = asyncio.ensure_future(worker())
+            for callback in self._done_callbacks:
+                task.add_done_callback(callback)
+            tasks.append(task)
+        return await asyncio.gather(*tasks)
