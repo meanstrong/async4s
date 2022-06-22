@@ -1,5 +1,6 @@
 # async4s - 一个简单易用的异步执行模块
 
+![image](https://img.shields.io/badge/made_in-china-ff2121.svg)
 [![image](https://img.shields.io/pypi/v/async4s.svg)](https://pypi.org/project/async4s/)
 [![image](https://img.shields.io/pypi/l/async4s.svg)](https://pypi.org/project/async4s/)
 
