@@ -21,7 +21,7 @@ pip install async4s
 ```python
 import time
 
-from async4s.thread import Master, Worker
+from async4s.mw.thread import Master, Worker
 
 def work(i):
     time.sleep(i)
@@ -43,7 +43,7 @@ print(time.perf_counter())
 import time
 import asyncio
 
-from async4s.coroutine import Master, Worker
+from async4s.mw.coroutine import Master, Worker
 
 
 async def work(i):
