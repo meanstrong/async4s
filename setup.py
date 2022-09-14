@@ -30,6 +30,6 @@ setup(
     maintainer_email="rockypengchina@outlook.com",
     platforms=["any"],
     include_package_data=True,
-    license="GPLv3",
+    license="Apache 2.0",
     classifiers=["Programming Language :: Python", "Programming Language :: Python :: 3"],
 )
