@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Producer-Comsumer模型-协程实现方式
+Producer-Consumer模型
 """
 
 from __future__ import annotations
@@ -19,10 +19,10 @@ class PC(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    async def comsume(self):
+    async def consume(self):
         pass
 
     async def start(self):
         producer = asyncio.ensure_future(self.produce())
-        comsumer = asyncio.ensure_future(self.comsume())
-        return await asyncio.gather(producer, comsumer)
+        consumer = asyncio.ensure_future(self.consume())
+        return await asyncio.gather(producer, consumer)
