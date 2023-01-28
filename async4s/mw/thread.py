@@ -13,7 +13,7 @@ __all__ = ["Master", "Worker"]
 
 class Worker(metaclass=abc.ABCMeta):
     def __init__(self):
-        self._master: Master = None
+        pass
 
     @abc.abstractmethod
     def run(self):
@@ -22,22 +22,13 @@ class Worker(metaclass=abc.ABCMeta):
     def done_callback(self, result: Future):
         pass
 
-    @property
-    def master(self):
-        return self._master
-
-    @master.setter
-    def master(self, master: Master):
-        self._master = master
-
 
 class Master(object):
     def __init__(self, max_workers: int = None):
         self._executor = ThreadPoolExecutor(max_workers=max_workers)
 
     def start(self, worker: Worker):
-        worker.master = self
         self._executor.submit(worker.run).add_done_callback(worker.done_callback)
 
-    def wait(self):
+    def join(self):
         self._executor.shutdown()
