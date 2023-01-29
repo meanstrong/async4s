@@ -31,6 +31,7 @@ class Runnable(metaclass=abc.ABCMeta):
     def join(self):
         for worker in self._workers:
             worker.join()
+        self._workers.clear()
 
     @property
     def buffer(self):
