@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 
 """
-Producer-Consumer模型-线程实现方式
+Producer-Consumer模型-进程实现方式
 """
 
 from __future__ import annotations
 
 import abc
-import threading
-from queue import Queue
+import multiprocessing
 from typing import Type
 
 
 class Runnable(metaclass=abc.ABCMeta):
-    def __init__(self, buffer: Queue, count_worker: int):
+    def __init__(self, buffer: multiprocessing.Queue, count_worker: int):
         self._buffer = buffer
         self._count_worker = count_worker
         self._workers = []
@@ -24,7 +23,7 @@ class Runnable(metaclass=abc.ABCMeta):
 
     def start(self):
         for _ in range(self._count_worker):
-            worker = threading.Thread(target=self.run, name=self.__class__.__name__, daemon=True)
+            worker = multiprocessing.Process(target=self.run, name=self.__class__.__name__, daemon=True)
             self._workers.append(worker)
             worker.start()
 
@@ -56,7 +55,7 @@ class Manager(object):
         self._consumer = consumer_cls(buffer, consumer_cnt)
 
     def _create_buffer(self, buffer_size=1024):
-        return Queue(buffer_size)
+        return multiprocessing.Queue(buffer_size)
 
     def start(self):
         self._producer.start()
