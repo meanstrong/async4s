@@ -50,3 +50,7 @@ class Manager(object):
         for _ in range(self._consumer_cnt):
             tasks.append(asyncio.ensure_future(self._consumer_cls(self._buffer).run()))
         return await asyncio.gather(*tasks, loop=loop)
+
+    @property
+    def buffer(self):
+        return self._buffer

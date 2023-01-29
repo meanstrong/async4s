@@ -51,9 +51,9 @@ class Consumer(Runnable):
 
 class Manager(object):
     def __init__(self, producer_cls: Type[Producer], producer_cnt: int, consumer_cls: Type[Consumer], consumer_cnt: int, buffer_size=1024):
-        buffer = self._create_buffer(buffer_size)
-        self._producer = producer_cls(buffer, producer_cnt)
-        self._consumer = consumer_cls(buffer, consumer_cnt)
+        self._buffer = self._create_buffer(buffer_size)
+        self._producer = producer_cls(self._buffer, producer_cnt)
+        self._consumer = consumer_cls(self._buffer, consumer_cnt)
 
     def _create_buffer(self, buffer_size=1024):
         return multiprocessing.Queue(buffer_size)
@@ -65,3 +65,15 @@ class Manager(object):
     def join(self):
         self._producer.join()
         self._consumer.join()
+
+    @property
+    def buffer(self):
+        return self._buffer
+
+    @property
+    def producer(self):
+        return self._producer
+
+    @property
+    def consumer(self):
+        return self._consumer
